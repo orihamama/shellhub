@@ -5,6 +5,7 @@ import { isSdkError } from "@/api/errors";
 import Drawer from "@/components/common/Drawer";
 import { LABEL, INPUT } from "@/utils/styles";
 import type { Namespace } from "@/client";
+import { normalizeNamespaceSettings } from "@/utils/namespaceSettings";
 
 interface EditNamespaceDrawerProps {
   open: boolean;
@@ -22,14 +23,12 @@ export default function EditNamespaceDrawer({
   const [name, setName] = useState("");
   const [maxDevices, setMaxDevices] = useState(-1);
   const [sessionRecord, setSessionRecord] = useState(false);
-  const [deviceAutoAccept, setDeviceAutoAccept] = useState(false);
   const [error, setError] = useState("");
 
   useResetOnOpen(open, () => {
     setName(namespace?.name ?? "");
     setMaxDevices(namespace?.max_devices ?? -1);
     setSessionRecord(namespace?.settings?.session_record ?? false);
-    setDeviceAutoAccept(namespace?.settings?.device_auto_accept ?? false);
     setError("");
   });
 
@@ -42,17 +41,15 @@ export default function EditNamespaceDrawer({
     try {
       await editNamespace.mutateAsync({
         path: { tenantID: namespace.tenant_id },
-        // The SDK types body as full Namespace; we spread the original
-        // to satisfy the type while only changing the editable fields.
         body: {
           ...namespace,
           name: name.trim(),
           max_devices: maxDevices,
           settings: {
-            connection_announcement:
-              namespace.settings?.connection_announcement ?? "",
-            session_record: sessionRecord,
-              device_auto_accept: deviceAutoAccept,
+            ...normalizeNamespaceSettings({
+              ...namespace.settings,
+              session_record: sessionRecord,
+            }),
           },
         },
       });
@@ -144,16 +141,6 @@ export default function EditNamespaceDrawer({
             className="w-4 h-4 rounded border-border bg-card text-primary focus:ring-primary/20"
           />
           <span className="text-sm text-text-primary">Session Recording</span>
-        </label>
-
-        <label className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={deviceAutoAccept}
-            onChange={(e) => setDeviceAutoAccept(e.target.checked)}
-            className="w-4 h-4 rounded border-border bg-card text-primary focus:ring-primary/20"
-          />
-          <span className="text-sm text-text-primary">Auto-Accept Devices</span>
         </label>
 
         {error && (

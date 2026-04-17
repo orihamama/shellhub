@@ -70,6 +70,8 @@ put:
               example:
                 env: production
                 owner: team-a
+            settings:
+              $ref: ../components/schemas/deviceSSH.yaml
           required:
             - name
   responses:

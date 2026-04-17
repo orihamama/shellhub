@@ -12,12 +12,14 @@ vi.mock("@/hooks/useDevice", () => ({
 }));
 
 const mockUpdateCustomFields = vi.fn();
+const mockUpdateSSH = vi.fn();
 
 vi.mock("@/hooks/useDeviceMutations", () => ({
   useRenameDevice: () => ({ mutateAsync: vi.fn() }),
   useAddDeviceTag: () => ({ mutateAsync: vi.fn() }),
   useRemoveDeviceTag: () => ({ mutateAsync: vi.fn() }),
   useRemoveDevice: () => ({ mutateAsync: vi.fn() }),
+  useUpdateDeviceSSH: () => ({ mutateAsync: mockUpdateSSH }),
   useUpdateDeviceCustomFields: () => ({ mutateAsync: mockUpdateCustomFields }),
 }));
 

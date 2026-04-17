@@ -18,6 +18,18 @@ type Position = {
   longitude: number;
 };
 
+type SSHSettings = {
+  allow_password: boolean;
+  allow_public_key: boolean;
+  allow_root: boolean;
+  allow_empty_passwords: boolean;
+  allow_tty: boolean;
+  allow_tcp_forwarding: boolean;
+  allow_web_endpoints: boolean;
+  allow_sftp: boolean;
+  allow_agent_forwarding: boolean;
+};
+
 export type DeviceStatus = "accepted" | "pending" | "rejected";
 
 export interface IDevice {
@@ -37,6 +49,7 @@ export interface IDevice {
   position: Position;
   tags: Array<ITag>;
   custom_fields?: Record<string, string>;
+  settings?: SSHSettings;
 }
 
 export interface IDeviceRename {

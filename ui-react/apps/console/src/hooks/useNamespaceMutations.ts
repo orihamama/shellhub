@@ -1,14 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
-import {
-  editNamespaceMutation,
-  setDeviceAutoAcceptMutation,
-} from "../client/@tanstack/react-query.gen";
+import { editNamespaceMutation } from "../client/@tanstack/react-query.gen";
 import {
   getNamespaceToken,
   createNamespace as createNamespaceSdk,
   deleteNamespace as deleteNamespaceSdk,
   leaveNamespace as leaveNamespaceSdk,
 } from "../client";
+import { client } from "../client/client.gen";
 import { useAuthStore } from "../stores/authStore";
 import { useInvalidateByIds } from "./useInvalidateQueries";
 
@@ -22,8 +20,19 @@ export function useEditNamespace() {
 
 export function useSetDeviceAutoAccept() {
   const invalidate = useInvalidateByIds("getNamespaces", "getNamespace");
-  return useMutation({
-    ...setDeviceAutoAcceptMutation(),
+  return useMutation<
+    void,
+    unknown,
+    { path: { tenant: string }; body: { device_auto_accept: boolean } }
+  >({
+    mutationFn: async (options: { path: { tenant: string }; body: { device_auto_accept: boolean } }) => {
+      await client.put({
+        url: "/api/namespaces/device-auto-accept/{tenant}",
+        path: options.path,
+        body: options.body,
+        throwOnError: true,
+      });
+    },
     onSuccess: invalidate,
   });
 }
