@@ -56,5 +56,3 @@ required:
   - session_record
   - connection_announcement
   - device_auto_accept
-  - allow_password
-  - allow_public_key
