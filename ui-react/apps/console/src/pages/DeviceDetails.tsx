@@ -414,6 +414,15 @@ export default function DeviceDetails() {
   const { device, isLoading } = useDevice(uid ?? "");
   const removeMutation = useRemoveDevice();
   const updateSSH = useUpdateDeviceSSH();
+  const canUpdateAllowPassword = useHasPermission("namespace:updateAllowPassword");
+  const canUpdateAllowPublicKey = useHasPermission("namespace:updateAllowPublicKey");
+  const canUpdateAllowRoot = useHasPermission("namespace:updateAllowRoot");
+  const canUpdateAllowEmptyPasswords = useHasPermission("namespace:updateAllowEmptyPasswords");
+  const canUpdateAllowTTY = useHasPermission("namespace:updateAllowTTY");
+  const canUpdateAllowTcpForwarding = useHasPermission("namespace:updateAllowTcpForwarding");
+  const canUpdateAllowWebEndpoints = useHasPermission("namespace:updateAllowWebEndpoints");
+  const canUpdateAllowSFTP = useHasPermission("namespace:updateAllowSFTP");
+  const canUpdateAllowAgentForwarding = useHasPermission("namespace:updateAllowAgentForwarding");
   const tenantId = useAuthStore((s) => s.tenant) ?? "";
   const { namespace: currentNamespace } = useNamespace(tenantId);
   type DeviceSSHSettings = NonNullable<Device["settings"]>;
@@ -789,6 +798,7 @@ export default function DeviceDetails() {
               <SettingToggle
                 checked={deviceSettings?.allow_password ?? true}
                 tone="success"
+                disabled={!canUpdateAllowPassword || updateSSH.isPending}
                 onChange={(checked) => {
                   return updateDeviceSetting({ allow_password: checked });
                 }}
@@ -815,6 +825,7 @@ export default function DeviceDetails() {
               <SettingToggle
                 checked={deviceSettings?.allow_public_key ?? true}
                 tone="success"
+                disabled={!canUpdateAllowPublicKey || updateSSH.isPending}
                 onChange={(checked) => {
                   return updateDeviceSetting({ allow_public_key: checked });
                 }}
@@ -841,6 +852,7 @@ export default function DeviceDetails() {
               <SettingToggle
                 checked={deviceSettings?.allow_root ?? true}
                 tone="success"
+                disabled={!canUpdateAllowRoot || updateSSH.isPending}
                 onChange={(checked) => {
                   return updateDeviceSetting({ allow_root: checked });
                 }}
@@ -867,6 +879,7 @@ export default function DeviceDetails() {
               <SettingToggle
                 checked={deviceSettings?.allow_empty_passwords ?? true}
                 tone="success"
+                disabled={!canUpdateAllowEmptyPasswords || updateSSH.isPending}
                 onChange={(checked) => {
                   return updateDeviceSetting({ allow_empty_passwords: checked });
                 }}
@@ -893,6 +906,7 @@ export default function DeviceDetails() {
               <SettingToggle
                 checked={deviceSettings?.allow_tty ?? true}
                 tone="success"
+                disabled={!canUpdateAllowTTY || updateSSH.isPending}
                 onChange={(checked) => {
                   return updateDeviceSetting({ allow_tty: checked });
                 }}
@@ -919,6 +933,7 @@ export default function DeviceDetails() {
               <SettingToggle
                 checked={deviceSettings?.allow_tcp_forwarding ?? true}
                 tone="success"
+                disabled={!canUpdateAllowTcpForwarding || updateSSH.isPending}
                 onChange={(checked) => {
                   return updateDeviceSetting({ allow_tcp_forwarding: checked });
                 }}
@@ -945,6 +960,7 @@ export default function DeviceDetails() {
               <SettingToggle
                 checked={deviceSettings?.allow_web_endpoints ?? true}
                 tone="success"
+                disabled={!canUpdateAllowWebEndpoints || updateSSH.isPending}
                 onChange={(checked) => {
                   return updateDeviceSetting({ allow_web_endpoints: checked });
                 }}
@@ -971,6 +987,7 @@ export default function DeviceDetails() {
               <SettingToggle
                 checked={deviceSettings?.allow_sftp ?? true}
                 tone="success"
+                disabled={!canUpdateAllowSFTP || updateSSH.isPending}
                 onChange={(checked) => {
                   return updateDeviceSetting({ allow_sftp: checked });
                 }}
@@ -997,6 +1014,7 @@ export default function DeviceDetails() {
               <SettingToggle
                 checked={deviceSettings?.allow_agent_forwarding ?? true}
                 tone="success"
+                disabled={!canUpdateAllowAgentForwarding || updateSSH.isPending}
                 onChange={(checked) => {
                   return updateDeviceSetting({ allow_agent_forwarding: checked });
                 }}
