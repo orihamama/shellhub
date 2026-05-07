@@ -103,15 +103,15 @@ type DeviceTag struct {
 }
 
 type SSHSettings struct {
-	AllowPassword        bool `json:"allow_password" bson:"allow_password,omitempty"`
-	AllowPublicKey       bool `json:"allow_public_key" bson:"allow_public_key,omitempty"`
-	AllowRoot            bool `json:"allow_root" bson:"allow_root,omitempty"`
-	AllowEmptyPasswords  bool `json:"allow_empty_passwords" bson:"allow_empty_passwords,omitempty"`
-	AllowTTY             bool `json:"allow_tty" bson:"allow_tty,omitempty"`
-	AllowTCPForwarding   bool `json:"allow_tcp_forwarding" bson:"allow_tcp_forwarding,omitempty"`
-	AllowWebEndpoints    bool `json:"allow_web_endpoints" bson:"allow_web_endpoints,omitempty"`
-	AllowSFTP            bool `json:"allow_sftp" bson:"allow_sftp,omitempty"`
-	AllowAgentForwarding bool `json:"allow_agent_forwarding" bson:"allow_agent_forwarding,omitempty"`
+	AllowPassword        bool `json:"allow_password" bson:"allow_password"`
+	AllowPublicKey       bool `json:"allow_public_key" bson:"allow_public_key"`
+	AllowRoot            bool `json:"allow_root" bson:"allow_root"`
+	AllowEmptyPasswords  bool `json:"allow_empty_passwords" bson:"allow_empty_passwords"`
+	AllowTTY             bool `json:"allow_tty" bson:"allow_tty"`
+	AllowTCPForwarding   bool `json:"allow_tcp_forwarding" bson:"allow_tcp_forwarding"`
+	AllowWebEndpoints    bool `json:"allow_web_endpoints" bson:"allow_web_endpoints"`
+	AllowSFTP            bool `json:"allow_sftp" bson:"allow_sftp"`
+	AllowAgentForwarding bool `json:"allow_agent_forwarding" bson:"allow_agent_forwarding"`
 }
 
 func DefaultSSHSettings() *SSHSettings {
