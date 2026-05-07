@@ -184,7 +184,10 @@ func (pg *Pg) NamespaceUpdate(ctx context.Context, namespace *models.Namespace) 
 
 		if n.Settings != nil {
 			n.Settings.UpdatedAt = clock.Now()
-			_, err = db.NewInsert().On("conflict (namespace_id) do update").Model(n.Settings).Exec(ctx)
+			_, err = db.NewInsert().
+				On("conflict (namespace_id) do update set updated_at = excluded.updated_at, record_sessions = excluded.record_sessions, connection_announcement = excluded.connection_announcement, allow_password = excluded.allow_password, allow_public_key = excluded.allow_public_key, allow_root = excluded.allow_root, allow_empty_passwords = excluded.allow_empty_passwords, allow_tty = excluded.allow_tty, allow_tcp_forwarding = excluded.allow_tcp_forwarding, allow_web_endpoints = excluded.allow_web_endpoints, allow_sftp = excluded.allow_sftp, allow_agent_forwarding = excluded.allow_agent_forwarding").
+				Model(n.Settings).
+				Exec(ctx)
 			if err != nil {
 				return fromSQLError(err)
 			}

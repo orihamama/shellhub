@@ -181,7 +181,10 @@ func (pg *Pg) DeviceUpdate(ctx context.Context, device *models.Device) error {
 			settings := entity.DeviceSettingsFromModel(device.SSH, device.UID)
 			settings.UpdatedAt = clock.Now()
 
-			_, err = db.NewInsert().On("conflict (device_id) do update").Model(&settings).Exec(ctx)
+			_, err = db.NewInsert().
+				On("conflict (device_id) do update set updated_at = excluded.updated_at, allow_password = excluded.allow_password, allow_public_key = excluded.allow_public_key, allow_root = excluded.allow_root, allow_empty_passwords = excluded.allow_empty_passwords, allow_tty = excluded.allow_tty, allow_tcp_forwarding = excluded.allow_tcp_forwarding, allow_web_endpoints = excluded.allow_web_endpoints, allow_sftp = excluded.allow_sftp, allow_agent_forwarding = excluded.allow_agent_forwarding").
+				Model(&settings).
+				Exec(ctx)
 			if err != nil {
 				return fromSQLError(err)
 			}
