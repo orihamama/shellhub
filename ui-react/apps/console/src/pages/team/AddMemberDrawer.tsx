@@ -3,7 +3,8 @@ import { useResetOnOpen } from "@/hooks/useResetOnOpen";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useAddMember } from "@/hooks/useMemberMutations";
 import Drawer from "@/components/common/Drawer";
-import { LABEL, INPUT } from "@/utils/styles";
+import InputField from "@/components/common/fields/InputField";
+import { LABEL } from "@/utils/styles";
 import { RoleSelector } from "./constants";
 import { type AssignableRole } from "./helpers";
 
@@ -53,7 +54,7 @@ function AddMemberDrawer({
       open={open}
       onClose={onClose}
       title="Add Member"
-      footer={(
+      footer={
         <>
           <button
             type="button"
@@ -67,33 +68,27 @@ function AddMemberDrawer({
             disabled={!email.trim() || submitting}
             className="px-5 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-lg text-sm font-semibold disabled:opacity-dim disabled:cursor-not-allowed transition-all flex items-center gap-2"
           >
-            {submitting
-              ? (
-                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              )
-              : (
-                <PlusIcon className="w-4 h-4" strokeWidth={2} />
-              )}
+            {submitting ? (
+              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <PlusIcon className="w-4 h-4" strokeWidth={2} />
+            )}
             Add Member
           </button>
         </>
-      )}
+      }
     >
       <form onSubmit={(e) => void handleSubmit(e)} className="space-y-5">
-        <div>
-          <label className={LABEL}>Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="user@example.com"
-            autoFocus={open}
-            className={INPUT}
-          />
-          <p className="text-2xs text-text-muted mt-1.5">
-            Must have an existing ShellHub account
-          </p>
-        </div>
+        <InputField
+          id="add-member-email"
+          label="Email"
+          type="email"
+          value={email}
+          onChange={setEmail}
+          placeholder="user@example.com"
+          hint="Must have an existing ShellHub account"
+          autoFocus={open}
+        />
         <div>
           <label className={LABEL}>Role</label>
           <RoleSelector value={role} onChange={setRole} />

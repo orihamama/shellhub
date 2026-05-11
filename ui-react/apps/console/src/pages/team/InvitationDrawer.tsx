@@ -13,7 +13,8 @@ import {
 } from "@/hooks/useInvitationMutations";
 import Drawer from "@/components/common/Drawer";
 import CopyButton from "@/components/common/CopyButton";
-import { LABEL, INPUT } from "@/utils/styles";
+import InputField from "@/components/common/fields/InputField";
+import { LABEL } from "@/utils/styles";
 import { RoleSelector } from "./constants";
 import { type AssignableRole } from "./helpers";
 
@@ -194,39 +195,20 @@ function InvitationDrawer({
         </div>
       ) : (
         <form onSubmit={(e) => void handleSubmit(e)} className="space-y-5">
-          <div>
-            <label className={LABEL} htmlFor="invitation-email">
-              Email
-            </label>
-            <input
-              id="invitation-email"
-              type="email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                if (emailError) setEmailError("");
-              }}
-              placeholder="user@example.com"
-              autoFocus={open}
-              className={`${INPUT} ${emailError ? "border-accent-red/60 focus:border-accent-red/60 focus:ring-accent-red/20" : ""}`}
-              aria-invalid={!!emailError}
-              aria-describedby={
-                emailError ? "invitation-email-error" : undefined
-              }
-            />
-            {emailError ? (
-              <p
-                id="invitation-email-error"
-                className="mt-1.5 text-2xs text-accent-red"
-              >
-                {emailError}
-              </p>
-            ) : (
-              <p className="mt-1.5 text-2xs text-text-muted">
-                If no account matches this email, we'll send a sign-up link.
-              </p>
-            )}
-          </div>
+          <InputField
+            id="invitation-email"
+            label="Email"
+            type="email"
+            value={email}
+            onChange={(v) => {
+              setEmail(v);
+              if (emailError) setEmailError("");
+            }}
+            placeholder="user@example.com"
+            error={emailError || undefined}
+            hint="If no account matches this email, we'll send a sign-up link."
+            autoFocus={open}
+          />
 
           <div>
             <label className={LABEL}>Role</label>
