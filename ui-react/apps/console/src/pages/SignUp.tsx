@@ -52,8 +52,6 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [acceptPrivacyPolicy, setAcceptPrivacyPolicy] = useState(false);
   const [acceptMarketing, setAcceptMarketing] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [accountCreated, setAccountCreated] = useState(false);
 
@@ -268,8 +266,6 @@ export default function SignUp() {
               onBlur={() => handleBlur("password")}
               error={fieldError("password")}
               placeholder="Min. 5 characters"
-              visible={showPassword}
-              onVisibilityChange={setShowPassword}
             />
 
             <PasswordField
@@ -280,8 +276,6 @@ export default function SignUp() {
               onBlur={() => handleBlur("confirmPassword")}
               error={fieldError("confirmPassword")}
               placeholder="Re-enter password"
-              visible={showConfirm}
-              onVisibilityChange={setShowConfirm}
             />
 
             {/* Privacy Policy checkbox (required) */}
