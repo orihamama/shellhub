@@ -9,14 +9,18 @@ import {
   ClipboardDocumentListIcon,
 } from "@heroicons/react/24/outline";
 import { DevicesIcon } from "@/components/icons";
-import { useCreatePublicKey, useUpdatePublicKey } from "@/hooks/usePublicKeyMutations";
+import {
+  useCreatePublicKey,
+  useUpdatePublicKey,
+} from "@/hooks/usePublicKeyMutations";
 import type { PublicKey } from "@/hooks/usePublicKeys";
 import type { PublicKeyRequest } from "@/client";
 import { isPublicKeyValid } from "@/utils/sshKeys";
 import RadioCard from "@/components/common/RadioCard";
 import TagsSelector from "@/components/common/TagsSelector";
 import Drawer from "@/components/common/Drawer";
-import { LABEL, INPUT, INPUT_MONO } from "@/utils/styles";
+import InputField from "@/components/common/fields/InputField";
+import { LABEL } from "@/utils/styles";
 import KeyDataInput from "./KeyDataInput";
 
 /* --- Drawer --- */
@@ -36,9 +40,13 @@ function KeyDrawer({
   const [name, setName] = useState("");
   const [keyData, setKeyData] = useState("");
   const [keyError, setKeyError] = useState<string | null>(null);
-  const [usernameOption, setUsernameOption] = useState<"all" | "username">("all");
+  const [usernameOption, setUsernameOption] = useState<"all" | "username">(
+    "all",
+  );
   const [username, setUsername] = useState("");
-  const [filterOption, setFilterOption] = useState<"all" | "hostname" | "tags">("all");
+  const [filterOption, setFilterOption] = useState<"all" | "hostname" | "tags">(
+    "all",
+  );
   const [hostname, setHostname] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
@@ -47,12 +55,12 @@ function KeyDrawer({
   useResetOnOpen(open, () => {
     const decodedKeyData = editKey
       ? (() => {
-        try {
-          return atob(editKey.data);
-        } catch {
-          return editKey.data;
-        }
-      })()
+          try {
+            return atob(editKey.data);
+          } catch {
+            return editKey.data;
+          }
+        })()
       : "";
     const filterInit = editKey
       ? editKey.filter.tags && editKey.filter.tags.length > 0
@@ -65,11 +73,19 @@ function KeyDrawer({
     setName(editKey?.name ?? "");
     setKeyData(decodedKeyData);
     setKeyError(null);
-    setUsernameOption(editKey ? (editKey.username === ".*" ? "all" : "username") : "all");
+    setUsernameOption(
+      editKey ? (editKey.username === ".*" ? "all" : "username") : "all",
+    );
     setUsername(editKey && editKey.username !== ".*" ? editKey.username : "");
     setFilterOption(filterInit);
-    setHostname(editKey && filterInit === "hostname" ? (editKey.filter.hostname ?? "") : "");
-    setSelectedTags(editKey && filterInit === "tags" ? (editKey.filter.tags ?? []) : []);
+    setHostname(
+      editKey && filterInit === "hostname"
+        ? (editKey.filter.hostname ?? "")
+        : "",
+    );
+    setSelectedTags(
+      editKey && filterInit === "tags" ? (editKey.filter.tags ?? []) : [],
+    );
     setSubmitting(false);
     setError(null);
   });
@@ -87,30 +103,31 @@ function KeyDrawer({
 
   const buildFilter = (): PublicKeyRequest["filter"] => {
     if (filterOption === "hostname" && hostname) return { hostname };
-    if (filterOption === "tags" && selectedTags.length > 0) return { tags: selectedTags };
+    if (filterOption === "tags" && selectedTags.length > 0)
+      return { tags: selectedTags };
     return { hostname: ".*" };
   };
 
-  const tagError
-    = selectedTags.length > 3
+  const tagError =
+    selectedTags.length > 3
       ? "You can select up to 3 tags"
       : filterOption === "tags" && selectedTags.length === 0
         ? "Select at least one tag"
         : undefined;
 
   const confirmDisabled = isEdit
-    ? !name.trim()
-    || (usernameOption === "username" && !username.trim())
-    || (filterOption === "hostname" && !hostname.trim())
-    || (filterOption === "tags"
-      && (selectedTags.length === 0 || selectedTags.length > 3))
-    : !name.trim()
-      || !keyData.trim()
-      || !!keyError
-      || (usernameOption === "username" && !username.trim())
-      || (filterOption === "hostname" && !hostname.trim())
-      || (filterOption === "tags"
-        && (selectedTags.length === 0 || selectedTags.length > 3));
+    ? !name.trim() ||
+      (usernameOption === "username" && !username.trim()) ||
+      (filterOption === "hostname" && !hostname.trim()) ||
+      (filterOption === "tags" &&
+        (selectedTags.length === 0 || selectedTags.length > 3))
+    : !name.trim() ||
+      !keyData.trim() ||
+      !!keyError ||
+      (usernameOption === "username" && !username.trim()) ||
+      (filterOption === "hostname" && !hostname.trim()) ||
+      (filterOption === "tags" &&
+        (selectedTags.length === 0 || selectedTags.length > 3));
 
   const handleSubmit = async (e?: FormEvent) => {
     e?.preventDefault();
@@ -158,7 +175,7 @@ function KeyDrawer({
       open={open}
       onClose={onClose}
       title={isEdit ? "Edit Public Key" : "New Public Key"}
-      footer={(
+      footer={
         <>
           <button
             type="button"
@@ -173,37 +190,30 @@ function KeyDrawer({
             disabled={submitting || confirmDisabled}
             className="px-5 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-lg text-sm font-semibold disabled:opacity-dim disabled:cursor-not-allowed transition-all"
           >
-            {submitting
-              ? (
-                <span className="flex items-center gap-2">
-                  <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Saving...
-                </span>
-              )
-              : isEdit
-                ? (
-                  "Save Changes"
-                )
-                : (
-                  "Create Key"
-                )}
+            {submitting ? (
+              <span className="flex items-center gap-2">
+                <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Saving...
+              </span>
+            ) : isEdit ? (
+              "Save Changes"
+            ) : (
+              "Create Key"
+            )}
           </button>
         </>
-      )}
+      }
     >
       <form onSubmit={(e) => void handleSubmit(e)} className="space-y-5">
         {/* Name */}
-        <div>
-          <label className={LABEL}>Name</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Name used to identify the public key"
-            autoFocus={open}
-            className={INPUT}
-          />
-        </div>
+        <InputField
+          id="public-key-name"
+          label="Name"
+          value={name}
+          onChange={setName}
+          placeholder="Name used to identify the public key"
+          autoFocus={open}
+        />
 
         {/* Username access */}
         <div>
@@ -225,13 +235,17 @@ function KeyDrawer({
             />
           </div>
           {usernameOption === "username" && (
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="e.g. root"
-              className={`${INPUT_MONO} mt-2`}
-            />
+            <div className="mt-2">
+              <InputField
+                id="public-key-username-pattern"
+                label="Username pattern"
+                hideLabel
+                value={username}
+                onChange={setUsername}
+                placeholder="e.g. root"
+                variant="mono"
+              />
+            </div>
           )}
         </div>
 
@@ -262,13 +276,17 @@ function KeyDrawer({
             />
           </div>
           {filterOption === "hostname" && (
-            <input
-              type="text"
-              value={hostname}
-              onChange={(e) => setHostname(e.target.value)}
-              placeholder="e.g. .*"
-              className={`${INPUT_MONO} mt-2`}
-            />
+            <div className="mt-2">
+              <InputField
+                id="public-key-hostname-pattern"
+                label="Hostname pattern"
+                hideLabel
+                value={hostname}
+                onChange={setHostname}
+                placeholder="e.g. .*"
+                variant="mono"
+              />
+            </div>
           )}
           {filterOption === "tags" && (
             <div className="mt-2">
