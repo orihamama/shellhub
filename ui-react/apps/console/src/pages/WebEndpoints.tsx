@@ -12,6 +12,7 @@ import PageHeader from "@/components/common/PageHeader";
 import Drawer from "@/components/common/Drawer";
 import ConfirmDialog from "@/components/common/ConfirmDialog";
 import NumericInput from "@/components/common/NumericInput";
+import InputField from "@/components/common/fields/InputField";
 import { formatDate } from "@/utils/date";
 import { LABEL, INPUT_MONO } from "@/utils/styles";
 import { useClickOutside } from "@/hooks/useClickOutside";
@@ -233,8 +234,10 @@ function TimeoutSelector({
 
     const numValue = parseInt(inputValue, 10);
     let customError: string | null = null;
-    if (isNaN(numValue) || numValue < 1) customError = "Must be at least 1 second";
-    else if (numValue > MAX_CUSTOM_TTL) customError = `Maximum is ${MAX_CUSTOM_TTL}`;
+    if (isNaN(numValue) || numValue < 1)
+      customError = "Must be at least 1 second";
+    else if (numValue > MAX_CUSTOM_TTL)
+      customError = `Maximum is ${MAX_CUSTOM_TTL}`;
 
     onErrorChange(customError);
   };
@@ -558,33 +561,35 @@ function EndpointDrawer({
               </div>
               {hostMode === "custom" && (
                 <div
-                  className="grid grid-cols-[1fr,100px] gap-2 mt-3 pt-3 border-t border-primary/10"
+                  className="flex items-start gap-2 mt-3 pt-3 border-t border-primary/10"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <input
-                    type="text"
-                    value={host}
-                    onChange={(e) => setHost(e.target.value)}
-                    placeholder="e.g. 192.168.1.100"
-                    className={INPUT_MONO}
-                    autoFocus
-                  />
-                  <NumericInput
-                    value={port}
-                    onChange={setPort}
-                    placeholder="Port"
-                    className={INPUT_MONO}
-                  />
-                  {hostError && (
-                    <p className="col-span-2 text-2xs text-accent-red">
-                      {hostError}
-                    </p>
-                  )}
-                  {portError && (
-                    <p className="col-span-2 text-2xs text-accent-red">
-                      {portError}
-                    </p>
-                  )}
+                  <div className="flex-1">
+                    <InputField
+                      id="endpoint-custom-host"
+                      label="Custom host"
+                      hideLabel
+                      value={host}
+                      onChange={setHost}
+                      placeholder="e.g. 192.168.1.100"
+                      variant="mono"
+                      error={hostError}
+                      autoFocus
+                    />
+                  </div>
+                  <div className="flex flex-col w-24">
+                    <NumericInput
+                      value={port}
+                      onChange={setPort}
+                      placeholder="Port"
+                      className={INPUT_MONO}
+                    />
+                    {portError && (
+                      <p className="text-2xs text-accent-red mt-1.5">
+                        {portError}
+                      </p>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
@@ -643,25 +648,16 @@ function EndpointDrawer({
                 </div>
               </label>
 
-              {/* Domain */}
-              <div>
-                <label className={LABEL}>Server Name (SNI)</label>
-                <input
-                  type="text"
-                  value={tlsDomain}
-                  onChange={(e) => setTlsDomain(e.target.value)}
-                  placeholder="e.g. myservice.local"
-                  className={INPUT_MONO}
-                />
-                <p className="mt-1 text-2xs text-text-muted">
-                  Domain sent during the TLS handshake with the device service.
-                </p>
-                {tlsDomainError && (
-                  <p className="mt-1 text-2xs text-accent-red">
-                    {tlsDomainError}
-                  </p>
-                )}
-              </div>
+              <InputField
+                id="endpoint-tls-domain"
+                label="Server Name (SNI)"
+                value={tlsDomain}
+                onChange={setTlsDomain}
+                placeholder="e.g. myservice.local"
+                variant="mono"
+                hint="Domain sent during the TLS handshake with the device service."
+                error={tlsDomainError}
+              />
             </div>
           )}
         </div>
