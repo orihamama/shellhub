@@ -4,8 +4,8 @@ import { useUpdateUser } from "@/hooks/useAdminUserMutations";
 import { useAuthStore } from "@/stores/authStore";
 import { isSdkError } from "@/api/errors";
 import Drawer from "@/components/common/Drawer";
-import { LABEL, INPUT } from "@/utils/styles";
-import PasswordInput from "./PasswordInput";
+import InputField from "@/components/common/fields/InputField";
+import PasswordField from "@/components/common/fields/PasswordField";
 import NamespaceLimitFields from "./NamespaceLimitFields";
 import { isMaxNamespacesValid } from "@/utils/validation";
 import type { UserStatus } from "./UserStatusChip";
@@ -147,59 +147,38 @@ export default function EditUserDrawer({
       }
     >
       <form onSubmit={(e) => void handleSubmit(e)} className="space-y-5">
-        {/* Name */}
-        <div>
-          <label className={LABEL} htmlFor="edit-user-name">
-            Name
-          </label>
-          <input
-            id="edit-user-name"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            autoFocus={open}
-            className={INPUT}
-          />
-        </div>
+        <InputField
+          id="edit-user-name"
+          label="Name"
+          value={name}
+          onChange={setName}
+          autoFocus={open}
+        />
 
-        {/* Username */}
-        <div>
-          <label className={LABEL} htmlFor="edit-user-username">
-            Username
-          </label>
-          <input
-            id="edit-user-username"
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className={INPUT}
-          />
-          <p className="text-2xs text-text-muted mt-1.5">
-            3-30 characters, letters, numbers, hyphens, dots, underscores, @
-          </p>
-        </div>
+        <InputField
+          id="edit-user-username"
+          label="Username"
+          value={username}
+          onChange={setUsername}
+          hint="3-30 characters, letters, numbers, hyphens, dots, underscores, @"
+        />
 
-        {/* Email */}
-        <div>
-          <label className={LABEL} htmlFor="edit-user-email">
-            Email
-          </label>
-          <input
-            id="edit-user-email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className={INPUT}
-          />
-        </div>
+        <InputField
+          id="edit-user-email"
+          label="Email"
+          type="email"
+          value={email}
+          onChange={setEmail}
+        />
 
-        {/* Password */}
-        <PasswordInput
+        <PasswordField
           id="edit-user-password"
+          label="Password"
           value={password}
           onChange={setPassword}
           placeholder="Leave blank to keep current"
           hint="Leave blank to keep the current password"
+          suppressPasswordManager
         />
 
         {/* Namespace Limit */}
