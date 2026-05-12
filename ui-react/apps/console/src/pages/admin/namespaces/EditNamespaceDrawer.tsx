@@ -3,6 +3,7 @@ import { useResetOnOpen } from "@/hooks/useResetOnOpen";
 import { useAdminEditNamespace } from "@/hooks/useAdminNamespaceMutations";
 import { isSdkError } from "@/api/errors";
 import Drawer from "@/components/common/Drawer";
+import InputField from "@/components/common/fields/InputField";
 import { LABEL, INPUT } from "@/utils/styles";
 import type { Namespace } from "@/client";
 import NumericInput from "@/components/common/NumericInput";
@@ -106,19 +107,13 @@ export default function EditNamespaceDrawer({
       }
     >
       <form onSubmit={(e) => void handleSubmit(e)} className="space-y-5">
-        <div>
-          <label className={LABEL} htmlFor="edit-ns-name">
-            Name
-          </label>
-          <input
-            id="edit-ns-name"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            autoFocus={open}
-            className={INPUT}
-          />
-        </div>
+        <InputField
+          id="edit-ns-name"
+          label="Name"
+          value={name}
+          onChange={setName}
+          autoFocus={open}
+        />
 
         <div>
           <label className={LABEL} htmlFor="edit-ns-max-devices">
